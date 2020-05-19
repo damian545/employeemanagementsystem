@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
   user: "root",
 
   // Your password
-  password: "d4mi4nt4pp1974",
+  password: "123456789",
   database: "employee_management_system_DB",
 });
 
@@ -33,7 +33,6 @@ function start() {
       choices: ["NAME", "DEPARTMENT", "MANAGER"],
     })
     .then(function (answer) {
-      // based on their answer, either call the bid or the post functions
       if (answer.employeeManagementSystem === "NAME") {
         name();
       } else if (answer.employeeManagementSystem === "DEPARTMENT") {
@@ -46,9 +45,7 @@ function start() {
     });
 }
 
-// function to handle posting new items up for auction
 function name() {
-  // prompt for info about the item being put up for auction
   inquirer
     .prompt([
       {
@@ -74,7 +71,6 @@ function name() {
       },
     ])
     .then(function (answer) {
-      // when finished prompting, insert a new item into the db with that info
       connection.query(
         "INSERT INTO employee management system SET ?",
         {
@@ -90,7 +86,7 @@ function name() {
           console.log(
             "Your employee management system was created successfully!"
           );
-          // re-prompt the user for if they want to bid or post
+
           start();
         }
       );
@@ -98,10 +94,9 @@ function name() {
 }
 
 function department() {
-  // query the database for all items being auctioned
   connection.query("SELECT * FROM department", function (err, results) {
     if (err) throw err;
-    // once you have the items, prompt the user for which they'd like to bid on
+
     inquirer
       .prompt([
         {
@@ -123,7 +118,6 @@ function department() {
         },
       ])
       .then(function (answer) {
-        // get the information of the chosen item
         var chosenName;
         for (var i = 0; i < results.length; i++) {
           if (results[i].item_name === answer.choice) {
@@ -131,12 +125,10 @@ function department() {
           }
         }
 
-        // determine if bid was high enough
         if (
           chosenName.employeeManagementSystem <
           parseInt(employeeManagementSystem)
         ) {
-          // bid was high enough, so update db, let the user know, and start over
           connection.query(
             "UPDATE employee SET ? WHERE ?",
             [
@@ -154,7 +146,6 @@ function department() {
             }
           );
         } else {
-          // bid wasn't high enough, so apologize and start over
           console.log("that person doesn't work here!");
           start();
         }
